@@ -5,6 +5,7 @@ import { pairFlags, pairingTitle, youngstersOfPairing } from '../../data/model.t
 import { BirdLink, Button, Card, Chip, Empty, ErrorText, Input, PageHeader, useAction } from '../../components/ui.tsx';
 import { Comments } from '../../components/Comments.tsx';
 import { AddRingsSheet } from './AddRingsSheet.tsx';
+import { useToast } from '../../components/toast.tsx';
 
 export function PairDetailPage() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ export function PairDetailPage() {
   const nav = useNavigate();
   const [adding, setAdding] = useState(false);
   const { busy, error, run } = useAction();
+  const toast = useToast();
   const p = id ? m.pairing.get(id) : undefined;
   if (!p) return <Empty>Pair not found.</Empty>;
 
@@ -109,6 +111,7 @@ export function PairDetailPage() {
           if (confirm(msg)) {
             void run(async () => {
               await store.remove('pairings', p.id);
+              toast('Pair deleted');
               nav('/pairings', { replace: true });
             });
           }

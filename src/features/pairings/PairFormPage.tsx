@@ -4,6 +4,7 @@ import { useModel, useStore } from '../../data/store.tsx';
 import { pairingTitle } from '../../data/model.ts';
 import type { Bird } from '../../data/types.ts';
 import { BirdPicker, resolvePicked, type PickedBird } from '../../components/BirdPicker.tsx';
+import { useToast } from '../../components/toast.tsx';
 import { Button, Empty, ErrorText, Field, Input, PageHeader, Select, Textarea, WarnText, useAction } from '../../components/ui.tsx';
 
 export function PairFormPage() {
@@ -22,6 +23,7 @@ export function PairFormPage() {
   const [hen, setHen] = useState<PickedBird | null>(existing ? { id: existing.hen_id } : null);
   const [notes, setNotes] = useState(existing?.notes ?? '');
   const { busy, error, run } = useAction();
+  const toast = useToast();
 
   if (id && !existing) return <Empty>Pair not found.</Empty>;
   if (!m.data.seasons.length) return <Empty>Add a season first (More → Seasons).</Empty>;
@@ -57,6 +59,7 @@ export function PairFormPage() {
         if (m.bird.get(bid)?.sex === 'unknown') await store.backend.update('birds', bid, { sex });
       }
       await store.reload();
+      toast(existing ? 'Pair saved' : 'Pair added');
       nav(`/pairings/${pid}`, { replace: true });
     });
 

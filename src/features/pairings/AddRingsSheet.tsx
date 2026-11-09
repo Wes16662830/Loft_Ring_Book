@@ -5,8 +5,27 @@ import { pairingTitle } from '../../data/model.ts';
 import type { Pairing } from '../../data/types.ts';
 import { DEFAULT_RING, parseRingEntry, ringClashes, type RingDefaults } from '../../lib/rings.ts';
 import { Button, Chip, cx, ErrorText, Field, Input, Sheet, WarnText, useAction } from '../../components/ui.tsx';
+import { useToast } from '../../components/toast.tsx';
 
 const DEFAULTS_KEY = 'loftbook.ringDefaults';
+const LAST_PAIR_KEY = 'loftbook.lastPair';
+
+/** The pair rings were last added to on this phone (for "Continue ringing" on the home screen). */
+export function getLastPairId(): string | null {
+  try {
+    return localStorage.getItem(LAST_PAIR_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setLastPairId(id: string) {
+  try {
+    localStorage.setItem(LAST_PAIR_KEY, id);
+  } catch {
+    /* ignore */
+  }
+}
 
 export function loadRingDefaults(seasonYear?: number): RingDefaults {
   try {
@@ -57,6 +76,7 @@ function AddRingsForm({ pairing, onDone }: { pairing: Pairing; onDone: () => voi
   const [r2, setR2] = useState('');
   const [confirmWarn, setConfirmWarn] = useState(false);
   const { busy, error, run } = useAction();
+  const toast = useToast();
 
   const existingClutch = clutches.find((c) => c.round_no === round);
   const existingInRound = existingClutch ? (m.youngstersOf.get(existingClutch.id) ?? []) : [];
@@ -101,6 +121,8 @@ function AddRingsForm({ pairing, onDone }: { pairing: Pairing; onDone: () => voi
       } finally {
         await store.reload();
       }
+      setLastPairId(pairing.id);
+      toast(`Saved ${parsed.numbers.join('/')} to ${pairingTitle(m, pairing)} · round ${round}`);
       onDone();
     });
 

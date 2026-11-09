@@ -7,6 +7,8 @@ import { BirdLink, BirdName, Button, Card, Chip, Empty, ErrorText, PageHeader, R
 import { BirdPicker, type PickedBird } from '../../components/BirdPicker.tsx';
 import { Comments } from '../../components/Comments.tsx';
 import { PairLine } from '../../components/PairSummary.tsx';
+import { useToast } from '../../components/toast.tsx';
+import { Pedigree } from './Pedigree.tsx';
 
 export function BirdPage() {
   const { id } = useParams();
@@ -15,6 +17,7 @@ export function BirdPage() {
   const nav = useNavigate();
   const [merging, setMerging] = useState(false);
   const { busy, error, run } = useAction();
+  const toast = useToast();
   const b = id ? m.bird.get(id) : undefined;
   if (!b) return <Empty>Bird not found.</Empty>;
 
@@ -34,6 +37,7 @@ export function BirdPage() {
     if (confirm(msg)) {
       void run(async () => {
         await store.remove('birds', b.id);
+        toast(`Deleted ${birdLabel(b)}`);
         nav(o ? `/pairings/${o.pairing.id}` : '/', { replace: true });
       });
     }
@@ -60,10 +64,12 @@ export function BirdPage() {
           {b.hatch_date && <Chip>Hatched {b.hatch_date}</Chip>}
         </div>
         <dl className="mt-3 grid grid-cols-[5.5rem_1fr] gap-x-2 gap-y-2">
-          <dt className="text-sm font-semibold text-slate-600 dark:text-slate-400">Sire</dt>
-          <dd><BirdLink bird={b.sire_id ? m.bird.get(b.sire_id) : null} /></dd>
-          <dt className="text-sm font-semibold text-slate-600 dark:text-slate-400">Dam</dt>
-          <dd><BirdLink bird={b.dam_id ? m.bird.get(b.dam_id) : null} /></dd>
+          {!b.sire_id && !b.dam_id && (
+            <>
+              <dt className="text-sm font-semibold text-slate-600 dark:text-slate-400">Parents</dt>
+              <dd className="text-slate-600 dark:text-slate-400">Not recorded</dd>
+            </>
+          )}
           {o && (
             <>
               <dt className="text-sm font-semibold text-slate-600 dark:text-slate-400">From</dt>
@@ -79,6 +85,8 @@ export function BirdPage() {
         </dl>
         {b.notes && <p className="mt-3 whitespace-pre-wrap border-t border-slate-200 pt-2 dark:border-slate-700">{b.notes}</p>}
       </Card>
+
+      <Pedigree bird={b} />
 
       {pairs.length > 0 && (
         <section className="space-y-2">
@@ -138,6 +146,7 @@ function MergeForm({ bird, onDone }: { bird: Bird; onDone: (keepId: string) => v
   const [other, setOther] = useState<PickedBird | null>(null);
   const [keepThis, setKeepThis] = useState(true);
   const { busy, error, run } = useAction();
+  const toast = useToast();
   const o = other && 'id' in other ? m.bird.get(other.id) : undefined;
   const keep = keepThis ? bird : o;
   const drop = keepThis ? o : bird;
@@ -168,6 +177,7 @@ function MergeForm({ bird, onDone }: { bird: Bird; onDone: (keepId: string) => v
             onClick={() =>
               run(async () => {
                 await store.mergeBirds(keep!.id, drop!.id);
+                toast(`Merged into ${birdLabel(keep)}`);
                 onDone(keep!.id);
               })
             }

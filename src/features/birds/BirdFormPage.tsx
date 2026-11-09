@@ -6,6 +6,7 @@ import { ringClashes } from '../../lib/rings.ts';
 import { BirdPicker, resolvePicked, type PickedBird } from '../../components/BirdPicker.tsx';
 import { Button, Empty, ErrorText, Field, Input, PageHeader, Select, Textarea, useAction } from '../../components/ui.tsx';
 import { loadRingDefaults } from '../pairings/AddRingsSheet.tsx';
+import { useToast } from '../../components/toast.tsx';
 
 export function BirdFormPage() {
   const { id } = useParams();
@@ -28,6 +29,7 @@ export function BirdFormPage() {
   const [dam, setDam] = useState<PickedBird | null>(b?.dam_id ? { id: b.dam_id } : null);
   const [notes, setNotes] = useState(b?.notes ?? '');
   const { busy, error, run } = useAction();
+  const toast = useToast();
 
   if (id && !b) return <Empty>Bird not found.</Empty>;
 
@@ -63,6 +65,7 @@ export function BirdFormPage() {
       if (b) await store.backend.update('birds', b.id, row);
       else bid = (await store.backend.insert('birds', [row]))[0].id;
       await store.reload();
+      toast(b ? 'Bird saved' : 'Bird added');
       nav(`/birds/${bid}`, { replace: true });
     });
 

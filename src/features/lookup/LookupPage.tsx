@@ -5,6 +5,8 @@ import { laterPairings, lookup, nestMates, originOf, pairingsOfBird, pairingTitl
 import type { Bird, Pairing } from '../../data/types.ts';
 import { BirdLink, BirdName, Card, Chip, Empty, Ring } from '../../components/ui.tsx';
 import { PairLine } from '../../components/PairSummary.tsx';
+import { HomeDashboard } from './HomeDashboard.tsx';
+import { SearchIcon } from '../../components/icons.tsx';
 
 const MODE_KEY = 'loftbook.lookupMode';
 
@@ -38,7 +40,14 @@ export function LookupPage() {
   };
 
   return (
-    <div className="space-y-4 pt-4">
+    <div className="space-y-4 pt-3">
+      <header className="flex items-center gap-3">
+        <img src="/icon.svg" alt="" className="h-10 w-10" />
+        <div className="flex-1 leading-tight">
+          <p className="text-lg font-bold">OudeLuck Lofts</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">{m.activeSeason?.name ?? 'Loft Book'}</p>
+        </div>
+      </header>
       <div className="flex gap-2">
         <div className="relative flex-1">
           <input
@@ -60,6 +69,7 @@ export function LookupPage() {
               ×
             </button>
           )}
+          {!q && <SearchIcon size={26} className="pointer-events-none absolute top-5 right-4 text-slate-400" />}
         </div>
         <button
           type="button"
@@ -71,7 +81,7 @@ export function LookupPage() {
         </button>
       </div>
 
-      {result.kind === 'empty' && <Hint />}
+      {result.kind === 'empty' && <HomeDashboard />}
 
       {result.kind === 'exact' && result.birds.map((b) => <BirdResult key={b.id} bird={b} />)}
 
@@ -116,22 +126,6 @@ export function LookupPage() {
           )}
         </>
       )}
-    </div>
-  );
-}
-
-function Hint() {
-  const m = useModel();
-  return (
-    <div className="space-y-3 text-slate-700 dark:text-slate-300">
-      <p>Type a ring number for its parents, box and nest mate. Tap ABC to search by name.</p>
-      <p className="text-sm">
-        {m.data.birds.filter((b) => b.ring_number != null).length} ringed birds · {m.data.birds.filter((b) => b.ring_number == null).length} named birds ·{' '}
-        {m.data.pairings.length} pairs
-      </p>
-      <Link to="/birds/new" className="inline-flex min-h-12 items-center rounded-xl border border-slate-300 px-4 font-semibold dark:border-slate-600">
-        + Add a bird
-      </Link>
     </div>
   );
 }
