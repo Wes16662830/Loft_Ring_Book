@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-ring: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --color-accent: #b45309;
+  --color-accent-dark: #fbbf24;
+}
+
+/* Ring numbers: condensed, tabular figures so columns of rings line up. */
+.ring {
+  font-family: var(--font-ring);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: 0.01em;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  @apply bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50 antialiased;
+}
