@@ -11,7 +11,7 @@
 }
 
 /* Ring numbers: condensed, tabular figures so columns of rings line up. */
-.ring {
+.ringnum {
   font-family: var(--font-ring);
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
