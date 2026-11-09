@@ -6,6 +6,8 @@ import { LookupPage } from '../features/lookup/LookupPage.tsx';
 import { PairingsPage } from '../features/pairings/PairingsPage.tsx';
 import { PairDetailPage } from '../features/pairings/PairDetailPage.tsx';
 import { PairFormPage } from '../features/pairings/PairFormPage.tsx';
+import { BirdPage } from '../features/birds/BirdPage.tsx';
+import { BirdFormPage } from '../features/birds/BirdFormPage.tsx';
 
 export function App() {
   return (
@@ -20,6 +22,9 @@ export function App() {
                 <Route path="pairings/new" element={<PairFormPage />} />
                 <Route path="pairings/:id" element={<PairDetailPage />} />
                 <Route path="pairings/:id/edit" element={<PairFormPage key="edit" />} />
+                <Route path="birds/new" element={<BirdFormPage />} />
+                <Route path="birds/:id" element={<BirdPage />} />
+                <Route path="birds/:id/edit" element={<BirdFormPage key="edit" />} />
               </Route>
             </Routes>
           </BrowserRouter>
