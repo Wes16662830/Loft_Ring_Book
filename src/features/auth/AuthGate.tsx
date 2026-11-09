@@ -127,7 +127,7 @@ function Login({ onDemo }: { onDemo: () => void }) {
               void run(async () => {
                 const { error } = await supabase().auth.signInWithOtp({
                   email: email.trim(),
-                  options: { emailRedirectTo: location.origin, shouldCreateUser: true },
+                  options: { emailRedirectTo: location.origin, shouldCreateUser: false },
                 });
                 if (error) throw error;
                 setSent(true);
