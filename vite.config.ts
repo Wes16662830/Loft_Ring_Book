@@ -26,14 +26,15 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // App shell only. Data always comes live from Supabase (no offline data by design).
+        // App shell only. Data always comes live from the /api Functions (no offline data by design).
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
       },
     }),
   ],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts', 'supabase/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'db/**/*.test.ts', 'functions/**/*.test.ts'],
   },
 });

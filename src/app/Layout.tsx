@@ -10,14 +10,18 @@ const tabs = [
 ];
 
 export function Layout() {
-  const { backend, error, model } = useStore();
+  const { error, model, reload } = useStore();
   return (
     <div className="mx-auto flex min-h-dvh max-w-xl flex-col">
-      {backend.kind === 'demo' && (
-        <div className="bg-amber-400 px-4 py-1 text-center text-sm font-semibold text-slate-950">Demo — changes are not saved</div>
+      {error && (
+        <div role="alert" className="flex items-center gap-2 bg-red-700 px-4 py-2 text-white">
+          <span className="flex-1">Could not load data: {error}</span>
+          <button type="button" className="min-h-10 rounded-lg border border-white/60 px-3 font-semibold" onClick={() => void reload()}>
+            Retry
+          </button>
+        </div>
       )}
-      {error && <div className="bg-red-700 px-4 py-2 text-white">Could not load data: {error}</div>}
-      <main className="flex-1 px-4 pb-28">{model ? <Outlet /> : <p className="py-10 text-center">Loading loft data…</p>}</main>
+      <main className="flex-1 px-4 pb-28">{model ? <Outlet /> : !error && <p className="py-10 text-center">Loading loft data…</p>}</main>
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-300 bg-white pb-[env(safe-area-inset-bottom)] dark:border-slate-700 dark:bg-slate-950">
         <ul className="mx-auto grid max-w-xl grid-cols-4">
           {tabs.map((t) => (

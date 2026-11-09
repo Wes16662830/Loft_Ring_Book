@@ -1,0 +1,12 @@
+# Cloudflare Pages + Functions + D1.
+# The built app (dist/) is the static site; the API lives in ./functions (every /api/* route).
+name = "loft-ring-book"
+compatibility_date = "2025-09-01"
+pages_build_output_dir = "dist"
+
+# D1 database binding. The deploy workflow creates the database on first run and writes its
+# real id here at deploy time, so this placeholder never needs hand-editing.
+[[d1_databases]]
+binding = "DB"
+database_name = "loft-ring-book"
+database_id = "00000000-0000-0000-0000-000000000000"

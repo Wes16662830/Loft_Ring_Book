@@ -19,7 +19,7 @@
   },
   "include": [
     "vite.config.ts",
-    "supabase/seed",
+    "db/seed", "functions",
     "src/**/*.test.ts"
   ]
 }

@@ -6,10 +6,8 @@ import { boxSection, boxSortOrder } from '../../lib/pairingText.ts';
 import { sequenceUsage } from '../../lib/rings.ts';
 import { Button, Card, Chip, cx, Empty, ErrorText, Field, Input, PageHeader, useAction } from '../../components/ui.tsx';
 import { getThemePref, setThemePref, type ThemePref } from '../../app/theme.ts';
-import { signOut } from '../auth/AuthGate.tsx';
 
 export function MorePage() {
-  const { backend } = useStore();
   const [theme, setTheme] = useState<ThemePref>(getThemePref());
   const links = [
     ['/birds/new', 'Add a bird'],
@@ -41,9 +39,6 @@ export function MorePage() {
           ))}
         </div>
       </Card>
-      <Button variant="secondary" className="w-full" onClick={signOut}>
-        {backend.kind === 'demo' ? 'Leave demo' : 'Sign out'}
-      </Button>
     </div>
   );
 }

@@ -22,7 +22,8 @@ function download(name: string, text: string) {
 const today = () => new Date().toISOString().slice(0, 10);
 
 async function insertChunks<T extends TableName>(backend: Backend, table: T, rows: Partial<Tables[T]>[]) {
-  for (let i = 0; i < rows.length; i += 500) await backend.insert(table, rows.slice(i, i + 500));
+  // Small requests keep each one well inside Cloudflare D1's per-request limits.
+  for (let i = 0; i < rows.length; i += 150) await backend.insert(table, rows.slice(i, i + 150));
 }
 
 export function ImportExportPage() {

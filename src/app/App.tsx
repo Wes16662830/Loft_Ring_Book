@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AuthGate } from '../features/auth/AuthGate.tsx';
+import { ApiBackend } from '../data/backend.ts';
 import { DataProvider } from '../data/store.tsx';
 import { Layout } from './Layout.tsx';
 import { LookupPage } from '../features/lookup/LookupPage.tsx';
@@ -13,33 +14,30 @@ import { BoxesPage, MorePage, SeasonsPage, SequencesPage } from '../features/set
 import { ImportExportPage } from '../features/importExport/ImportExportPage.tsx';
 
 export function App() {
+  const [backend] = useState(() => new ApiBackend());
   return (
-    <AuthGate>
-      {(backend) => (
-        <DataProvider backend={backend}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route index element={<LookupPage />} />
-                <Route path="pairings" element={<PairingsPage />} />
-                <Route path="pairings/new" element={<PairFormPage />} />
-                <Route path="pairings/:id" element={<PairDetailPage />} />
-                <Route path="pairings/:id/edit" element={<PairFormPage key="edit" />} />
-                <Route path="birds/new" element={<BirdFormPage />} />
-                <Route path="birds/:id" element={<BirdPage />} />
-                <Route path="birds/:id/edit" element={<BirdFormPage key="edit" />} />
-                <Route path="stats" element={<StatsPage />} />
-                <Route path="more" element={<MorePage />} />
-                <Route path="boxes" element={<BoxesPage />} />
-                <Route path="seasons" element={<SeasonsPage />} />
-                <Route path="sequences" element={<SequencesPage />} />
-                <Route path="import-export" element={<ImportExportPage />} />
-                <Route path="*" element={<p className="py-10 text-center">Page not found.</p>} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </DataProvider>
-      )}
-    </AuthGate>
+    <DataProvider backend={backend}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<LookupPage />} />
+            <Route path="pairings" element={<PairingsPage />} />
+            <Route path="pairings/new" element={<PairFormPage />} />
+            <Route path="pairings/:id" element={<PairDetailPage />} />
+            <Route path="pairings/:id/edit" element={<PairFormPage key="edit" />} />
+            <Route path="birds/new" element={<BirdFormPage />} />
+            <Route path="birds/:id" element={<BirdPage />} />
+            <Route path="birds/:id/edit" element={<BirdFormPage key="edit" />} />
+            <Route path="stats" element={<StatsPage />} />
+            <Route path="more" element={<MorePage />} />
+            <Route path="boxes" element={<BoxesPage />} />
+            <Route path="seasons" element={<SeasonsPage />} />
+            <Route path="sequences" element={<SequencesPage />} />
+            <Route path="import-export" element={<ImportExportPage />} />
+            <Route path="*" element={<p className="py-10 text-center">Page not found.</p>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </DataProvider>
   );
 }

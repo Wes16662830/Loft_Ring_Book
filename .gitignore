@@ -6,4 +6,5 @@ dev-dist
 *.local
 .DS_Store
 coverage
-supabase/.temp
+.wrangler
+.dev.vars

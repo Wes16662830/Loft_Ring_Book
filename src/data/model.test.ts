@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSeedPlan } from '../../supabase/seed/generate-seed.ts';
+import { buildSeedPlan } from '../../db/seed/generate-seed.ts';
 import { buildModel, laterPairings, lookup, nestMates, originOf, pairingTitle, seasonStats } from './model.ts';
 import type { AllData } from './types.ts';
 
