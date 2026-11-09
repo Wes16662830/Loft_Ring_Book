@@ -8,6 +8,9 @@ import { PairDetailPage } from '../features/pairings/PairDetailPage.tsx';
 import { PairFormPage } from '../features/pairings/PairFormPage.tsx';
 import { BirdPage } from '../features/birds/BirdPage.tsx';
 import { BirdFormPage } from '../features/birds/BirdFormPage.tsx';
+import { StatsPage } from '../features/stats/StatsPage.tsx';
+import { BoxesPage, MorePage, SeasonsPage, SequencesPage } from '../features/settings/SettingsPages.tsx';
+import { ImportExportPage } from '../features/importExport/ImportExportPage.tsx';
 
 export function App() {
   return (
@@ -25,6 +28,13 @@ export function App() {
                 <Route path="birds/new" element={<BirdFormPage />} />
                 <Route path="birds/:id" element={<BirdPage />} />
                 <Route path="birds/:id/edit" element={<BirdFormPage key="edit" />} />
+                <Route path="stats" element={<StatsPage />} />
+                <Route path="more" element={<MorePage />} />
+                <Route path="boxes" element={<BoxesPage />} />
+                <Route path="seasons" element={<SeasonsPage />} />
+                <Route path="sequences" element={<SequencesPage />} />
+                <Route path="import-export" element={<ImportExportPage />} />
+                <Route path="*" element={<p className="py-10 text-center">Page not found.</p>} />
               </Route>
             </Routes>
           </BrowserRouter>
