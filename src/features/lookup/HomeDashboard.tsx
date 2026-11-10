@@ -6,6 +6,7 @@ import type { Bird } from '../../data/types.ts';
 import { BirdName, Button, cx } from '../../components/ui.tsx';
 import { AlertIcon, ChevronIcon, PlusIcon, RingIcon } from '../../components/icons.tsx';
 import { AddRingsSheet, getLastPairId } from '../pairings/AddRingsSheet.tsx';
+import { useInstall } from '../../app/install.ts';
 
 /** Shown under the search box when nothing is typed. */
 export function HomeDashboard() {
@@ -43,6 +44,8 @@ export function HomeDashboard() {
         <Tile to="/stats" value={gaps} label="Ring gaps" tone={gaps ? 'warn' : undefined} />
       </div>
 
+      <InstallBanner />
+
       <ContinueRinging />
 
       {recent.length > 0 && (
@@ -77,6 +80,39 @@ export function HomeDashboard() {
       <p className="pt-2 text-center text-xs text-slate-500 dark:text-slate-400">
         {m.data.birds.length} birds · {m.data.pairings.length} pairs across {m.data.seasons.length} season{m.data.seasons.length === 1 ? '' : 's'}
       </p>
+    </div>
+  );
+}
+
+const HIDE_INSTALL_KEY = 'loftbook.hideInstall';
+
+function InstallBanner() {
+  const inst = useInstall();
+  const [hidden, setHidden] = useState(() => {
+    try {
+      return localStorage.getItem(HIDE_INSTALL_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  if (hidden || inst.installed || !inst.canPrompt) return null;
+  const hide = () => {
+    setHidden(true);
+    try {
+      localStorage.setItem(HIDE_INSTALL_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+  };
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-slate-300 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+      <img src="/icon-192.png" alt="" className="h-10 w-10 rounded-lg" />
+      <span className="flex-1 text-sm">
+        <strong className="block text-base">Install Loft Book</strong>
+        Opens from your home screen, full-screen.
+      </span>
+      <Button className="min-h-11 px-3" onClick={() => void inst.install()}>Install</Button>
+      <button type="button" onClick={hide} className="min-h-11 min-w-9 text-xl text-slate-500" aria-label="Hide install suggestion">×</button>
     </div>
   );
 }

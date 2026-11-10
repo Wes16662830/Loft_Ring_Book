@@ -6,6 +6,7 @@ import { boxSection, boxSortOrder } from '../../lib/pairingText.ts';
 import { sequenceUsage } from '../../lib/rings.ts';
 import { Button, Card, Chip, cx, Empty, ErrorText, Field, Input, PageHeader, useAction } from '../../components/ui.tsx';
 import { getThemePref, setThemePref, type ThemePref } from '../../app/theme.ts';
+import { useInstall } from '../../app/install.ts';
 
 export function MorePage() {
   const [theme, setTheme] = useState<ThemePref>(getThemePref());
@@ -29,6 +30,7 @@ export function MorePage() {
           </li>
         ))}
       </ul>
+      <InstallCard />
       <Card>
         <h2 className="mb-2 font-bold">Theme</h2>
         <div className="grid grid-cols-3 gap-2">
@@ -40,6 +42,33 @@ export function MorePage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+function InstallCard() {
+  const inst = useInstall();
+  if (inst.installed) return null;
+  return (
+    <Card className="space-y-2">
+      <h2 className="font-bold">Install on this phone</h2>
+      {inst.canPrompt ? (
+        <>
+          <p className="text-sm text-slate-700 dark:text-slate-300">Adds Loft Book to your home screen. It opens full-screen like an app.</p>
+          <Button className="w-full" onClick={() => void inst.install()}>Install app</Button>
+        </>
+      ) : inst.inAppBrowser ? (
+        <p className="text-sm">
+          This page is open inside another app (e.g. WhatsApp or Gmail), which can’t install apps. Tap <strong>⋮</strong> and choose{' '}
+          <strong>Open in Chrome</strong>, then come back here.
+        </p>
+      ) : (
+        <ol className="list-decimal space-y-1 pl-5 text-sm">
+          <li>Open <strong>loft-ring-book.pages.dev</strong> in <strong>Chrome</strong>.</li>
+          <li>Tap <strong>⋮</strong> (top right) → <strong>Add to home screen</strong> or <strong>Install app</strong> → <strong>Install</strong>.</li>
+          <li>Samsung Internet: tap <strong>☰</strong> → <strong>Add page to</strong> → <strong>Home screen</strong>.</li>
+        </ol>
+      )}
+    </Card>
   );
 }
 
